@@ -1,14 +1,15 @@
 {
   "name": "ems-project",
+  "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite",
-  "build": "vite build",
-  "preview": "vite preview"
+   "test": "echo \"Error: no test specified\" && exit 1",
+  "dev": "npm --prefix client run dev",
+  "build": "npm --prefix client run build",
+  "preview": "npm --prefix client run preview"
   },
+  "workspaces": ["client"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/misgechekole06-sketch/EMS-Project.git"

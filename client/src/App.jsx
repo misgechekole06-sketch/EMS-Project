@@ -3,7 +3,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import LoginLanding from './pages/LoginLanding';
 import LoginForm from './components/LoginForm';
 
-// import { Settings } from 'lucide-react';
+import RequireAuth from './components/RequireAuth';
 
 import Settings from './pages/Settings';
 import Layout from './pages/Layout';
@@ -13,8 +13,6 @@ import Attendance from './pages/Attendance';
 import Leave from './pages/Leave';
 import Payslips from './pages/Payslips';
 import PrintPayslip from './pages/PrintPayslip';
-// import Layout from './pages/Layout';
-// import { LayoutDashboard, Settings } from 'lucide-react';
 const App = () => {
   return (
     <>
@@ -25,7 +23,7 @@ const App = () => {
         <Route path='/login/admin' element={ <LoginForm role='admin' title='Admin Portal' subtitle='sign in to manage the organization'/>  }/>
 
         <Route path='/login/employee' element={ <LoginForm role='employee' title='Employee Portal' subtitle='sign in to access your account'/>  }/>
-
+<Route element={<RequireAuth />}>
         <Route element={<Layout />}>
             <Route path='/dashboard' element={<Dashboard />}/> 
             <Route path='/employees' element={<Employees />}/> 
@@ -35,8 +33,8 @@ const App = () => {
             <Route path='/settings' element={<Settings />}/>
         </Route>
         <Route path='/print/payslips/:id' element={ <PrintPayslip/> }/>
-         
-        <Route path='*' element={<Navigate to='/dashboard' replace/>} />
+         </Route>
+        <Route path='*' element={<Navigate to='/login' replace/>} />
 
       </Routes>
     </>

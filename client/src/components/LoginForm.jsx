@@ -36,7 +36,7 @@ const LoginForm = ({role, title, subtitle}) => {
 
         <form  className="space-y-5" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
               Email address
             </label>
             <input
@@ -60,8 +60,11 @@ const LoginForm = ({role, title, subtitle}) => {
               className="pr-11"
               placeholder="••••••••"/>
 
-              <button type="button" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-              
+              <button 
+              type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"              
               onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon  size={18}/>}
               </button>
@@ -69,7 +72,7 @@ const LoginForm = ({role, title, subtitle}) => {
             </div>            
 
           </div>
-          < button type="submit" disabled={loading} className="w-full py-3 bg-linear-to-r from-indigo-600 to-indigo-500 text-white rounded-md text-sm font-semibold 
+          <button type="submit" disabled={loading} className="w-full py-3 bg-linear-to-r from-indigo-600 to-indigo-500 text-white rounded-md text-sm font-semibold 
           hover:from-indigo-700 hover:to-indigo-600 disabled:opacity-50 transition-all duration-200 shadow-lg shadow-indigo-500/25 active:scale-[0.98] flex items-center justify-center">
             {loading ? 'Signing in...' : 'Sign In'}
           </button>   

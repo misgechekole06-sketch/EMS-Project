@@ -2,12 +2,8 @@
 import LoginLeftSide from '../components/LoginLeftSide';
 import LoginForm from '../components/LoginForm';
 
-// import { ArrowRightIcon, ShieldCheck as ShieldIcon, User as UserIcon } from 'lucide-react';
-
 import { ArrowRight as ArrowRightIcon, Shield as ShieldIcon, User as UserIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-// import { ArrowRight, Shield as ShieldIcon, User as UserIcon } from 'lucide-react';
 
 const LoginLanding = () => {
 
