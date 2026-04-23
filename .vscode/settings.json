@@ -1,0 +1,7 @@
+{
+  "terminal.integrated.cwd": "${workspaceFolder}/client"
+}
+
+"emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+}
