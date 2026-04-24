@@ -1,5 +1,6 @@
+import { useAuth } from '../context/AuthContext';
 import { useEffect, useState } from 'react'
-import { href, Link, useLocation } from 'react-router-dom'
+import {Link, useLocation } from 'react-router-dom'
 import { dummyProfileData } from '../assets/assets'
 import { LogOutIcon, MenuIcon, UserIcon, XIcon } from 'lucide-react'
 import { 
@@ -25,12 +26,13 @@ const Sidebar = () => {
     setMobileOpen(false)
   }, [pathname])
 
-  const role = "" || "EMPLOYEE";
+ const { user } = useAuth();
+const role = user?.role || "EMPLOYEE";
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutGridIcon },
-    role === "ADMIN" ?
-    { name: 'Employees', href: '/employees', icon: UsersIcon } :
-    { name: 'Attendance', href: '/attendance', icon: CalendarIcon },
+    role === "ADMIN"
+    ? { name: 'Employees', href: '/employees', icon: UsersIcon }
+    : { name: 'Attendance', href: '/attendance', icon: CalendarIcon },
     { name: 'Leave', href: '/leave', icon: FileTextIcon },
     { name: 'Payslips', href: '/payslips', icon: DollarSignIcon },
     { name: 'Settings', href: '/settings', icon: SettingsIcon },
