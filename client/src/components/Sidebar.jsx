@@ -27,7 +27,7 @@ const Sidebar = () => {
   }, [pathname])
 
  const { user } = useAuth();
-const role = user?.role || "EMPLOYEE";
+const role = "ADMIN" || "EMPLOYEE";
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutGridIcon },
     role === "ADMIN"
