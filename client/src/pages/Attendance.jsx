@@ -41,15 +41,15 @@ const Attendance = () => {
             attendance records because your employee
              record has been deleted.</p>
         </div>
-      ): (
+      ) : (
+        <>
         <div className="mb-8">
-
           <CheckInButton todayRecord={todayRecord} onAction={fetchData}/>
-        </div> 
+        </div>
+        <AttendanceStats history={history}/>
+        <AttendanceHistory history={history}/>
+        </>
       )}
-
-      <AttendanceStats history={history}/>
-      <AttendanceHistory history={history}/>
     </div>
   )
 }
