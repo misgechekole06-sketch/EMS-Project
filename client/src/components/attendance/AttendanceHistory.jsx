@@ -44,8 +44,7 @@ const AttendanceHistory = ({ history }) => {
                   </td>
 
                   <td className="px-6 py-4 text-slate-600">
-                    {record.checkIn ? format(new Date(record.
-                      checkIn),"hh: mm a"): "-"}                  
+                    {record.checkIn ? format(new Date(record.checkIn), "hh:mm a") : "-"}
                   </td>
 
                    <td className="px-6 py-4 text-slate-600">
