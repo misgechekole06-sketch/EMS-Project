@@ -3,7 +3,6 @@ import { dummyEmployeeData, DEPARTMENTS } from '../assets/assets';
 import { X, Plus, Search } from 'lucide-react';
 import EmployeeCard from '../components/EmployeeCard';
 import EmployeeForm from '../components/EmployeeForm';
-
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);

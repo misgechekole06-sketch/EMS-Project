@@ -10,8 +10,8 @@ const EmployeeForm = ({initialData, onSuccess, onCancel}) => {
         e.preventDefault();
     }
 
-  return (
-    <form className="space-y-6 max-w-3xl animate-fade-in" 
+  return ( 
+    <form className="space-y-6 max-w-3xl animate-fade-in" key={initialData?._id || 'new'}
     onSubmit={handleSubmit}>
 
         {/* Personal Information */}
@@ -40,8 +40,7 @@ const EmployeeForm = ({initialData, onSuccess, onCancel}) => {
 
                  <div>
                 <label className="block mb-2">Join Date</label>
-                <input name="joinDate" type="date" required defaultValue=
-                {initialData?.joinDate ? new Date(initialData.joinDate).toISOString().split('T')[0] : ''} />
+                <input name="joinDate" type="date" required defaultValue={initialData?.joinDate ? new Date(initialData.joinDate).toLocaleDateString('en-CA') : ''} />
                  </div>
 
                  <div className="sm:col-span-2">
@@ -79,19 +78,19 @@ const EmployeeForm = ({initialData, onSuccess, onCancel}) => {
 
                  <div>
                 <label className="block mb-2">Basic Salary</label>
-                <input name="basicSalary" type="number" required min="0" step="0.01" defaultValue=
+                <input name="basicSalary" type="number" valueAsNumber required min="0" step="0.01" defaultValue=
                 {initialData?.basicSalary || 0} />
                  </div>
 
                  <div>
                 <label className="block mb-2">Allowance</label>
-                <input name="allowance" type="number" min="0" step="0.01" required defaultValue=
+                <input name="allowance" type="number" valueAsNumber min="0" step="0.01" required defaultValue=
                 {initialData?.allowance || 0} />
                  </div>
 
                  <div>
                 <label className="block mb-2">Deductions</label>
-                <input name="deductions" type="number" min="0" step="0.01" required defaultValue=
+                <input name="deductions" type="number" valueAsNumber min="0" step="0.01" required defaultValue=
                 {initialData?.deductions || 0} />
                  </div>
 
@@ -127,7 +126,7 @@ const EmployeeForm = ({initialData, onSuccess, onCancel}) => {
         {!isEditMode && (
             <div>
                 <label className="block mb-2">Temporary Password</label>
-                <input name="password" type="password" required/>
+                <input name="password" type="password"/>
                  </div>
             )} 
 

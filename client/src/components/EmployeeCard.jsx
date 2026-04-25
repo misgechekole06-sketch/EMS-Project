@@ -24,7 +24,7 @@ const EmployeeCard = ({ employee, onDelete, onEdit}) => {
         </div>
        </div>
       <div className="absolute top-3 left-3  flex gap-2">
-        <span onClick={onEdit} className=" bg-white/90 background-blur-sm px-2.5 py-1 
+        <span onClick={() => onEdit(employee)} className=" bg-white/90 background-blur-sm px-2.5 py-1 
         text-xs font-semibold text-slate-600 rounded-lg shadow sm">
           {employee.department || "Remote" }
           {employee.isDeleted && <span className="bg-red-500/60 
