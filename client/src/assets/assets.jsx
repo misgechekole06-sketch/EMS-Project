@@ -26,7 +26,7 @@ export const dummyProfileData = {
     _id: "69b411e6f8a807df391d7b13",
     firstName: "Misge",
     lastName: "Chekole  ",
-    email: "misgechekole06@gmail.com",
+    email: "employee06@example.com",
     image: null,
 };
 
@@ -35,13 +35,13 @@ export const dummyEmployeeData = [
         _id: "69b414a7f8a807df391d7b58",
         userId: {
             _id: "69b414a7f8a807df391d7b56",
-            email: "david@example.com",
+            email: "abel@example.com",
             role: "EMPLOYEE",
         },
         department: "IT Support",
-        firstName: "David",
-        lastName: "Michael",
-        email: "david@example.com",
+        firstName: "Abel",
+        lastName: "Teshome",
+        email: "abel@example.com",
         phone: "9000000001",
         position: "Associate Business Support",
         basicSalary: 1000,
@@ -56,7 +56,7 @@ export const dummyEmployeeData = [
         updatedAt: "2026-03-13T13:44:07.806Z",
         id: "69b414a7f8a807df391d7b58",
         user: {
-            email: "david@example.com",
+            email: "abel@example.com",
             role: "EMPLOYEE",
         },
     },
@@ -64,13 +64,13 @@ export const dummyEmployeeData = [
         _id: "69b41439f8a807df391d7b52",
         userId: {
             _id: "69b41439f8a807df391d7b50",
-            email: "alex@example.com",
+            email: "alemu@example.com",
             role: "EMPLOYEE",
         },
         department: "Engineering",
-        firstName: "Alex",
-        lastName: "Matthew",
-        email: "alex@example.com",
+        firstName: "Alemu",
+        lastName: "Sisay",
+        email: "alemu@example.com",
         phone: "9000000001",
         position: "Software Developer",
         basicSalary: 2000,
@@ -85,7 +85,7 @@ export const dummyEmployeeData = [
         updatedAt: "2026-03-13T13:42:17.589Z",
         id: "69b41439f8a807df391d7b52",
         user: {
-            email: "alex@example.com",
+            email: "alemu@example.com",
             role: "EMPLOYEE",
         },
     },
@@ -288,8 +288,6 @@ export const dummyAttendanceData = [
         updatedAt: "2026-03-13T13:48:42.433Z",
     },
 ];
-
-
 export function getWorkingHoursDisplay(record) {
     if (record.workingHours != null) {
         const hrs = Math.floor(record.workingHours);

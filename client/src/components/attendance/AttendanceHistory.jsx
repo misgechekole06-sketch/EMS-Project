@@ -4,6 +4,10 @@ import {format} from 'date-fns'
 
 const AttendanceHistory = ({ history }) => {
 
+<<<<<<< HEAD
+   return (
+     
+=======
   // const getDayTypeDisplay = (record) => {
   //   return record.dayType || "Regular Office";
   // };
@@ -77,6 +81,7 @@ const AttendanceHistory = ({ history }) => {
       </div>
       
     </div>
+>>>>>>> ae693164339a54d916f28ede9a9aa20150565d8e
   )
 }
 
