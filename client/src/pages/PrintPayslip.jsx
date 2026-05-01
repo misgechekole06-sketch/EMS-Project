@@ -28,8 +28,7 @@ if(!payslip) return <p className='text-center py-12 text-slate-400'>Payslip not 
           <p className='text-xs text-slate-400 uppercase
            tracking-wider mb-1'>
             Employee Name</p>  
-          <p className='font-semiblod text-slate-900'>{payslip.employee?.firstName} 
-            {payslip.employee?.lastName}</p>        
+          <p className='font-semiblod text-slate-900'>{payslip.employee?.firstName} {payslip.employee?.lastName}</p>        
         </div>
 
         <div>
