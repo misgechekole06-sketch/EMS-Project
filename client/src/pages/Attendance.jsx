@@ -45,18 +45,11 @@ const Attendance = () => {
         <>
         <div className="mb-8">
           <CheckInButton todayRecord={todayRecord} onAction={fetchData}/>
-<<<<<<< HEAD
         </div> 
       
       <AttendanceStats history={history}/>
       <AttendanceHistory history={history}/>
       </>
-=======
-        </div>
-        <AttendanceStats history={history}/>
-        <AttendanceHistory history={history}/>
-        </>
->>>>>>> ae693164339a54d916f28ede9a9aa20150565d8e
       )}
     </div>
   )

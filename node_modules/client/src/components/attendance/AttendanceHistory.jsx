@@ -4,13 +4,9 @@ import {format} from 'date-fns'
 
 const AttendanceHistory = ({ history }) => {
 
-<<<<<<< HEAD
-   return (
-     
-=======
-  // const getDayTypeDisplay = (record) => {
-  //   return record.dayType || "Regular Office";
-  // };
+  const getDayTypeDisplay = (record) => {
+    return record.dayType || "Regular Office";
+  };
   return (
     <div className="card overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100">
@@ -81,7 +77,6 @@ const AttendanceHistory = ({ history }) => {
       </div>
       
     </div>
->>>>>>> ae693164339a54d916f28ede9a9aa20150565d8e
   )
 }
 
