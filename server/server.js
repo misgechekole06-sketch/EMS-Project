@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import multer from "multer";
-import connectDB, { sequelize } from "./config/db.js"; 
-import User from "./models/User.js"; 
+import connectDB, { sequelize } from "./config/db.js";
+import User from "./models/User.js";
 import Employee from "./models/Employee.js";
 import authRouter from "./routes/authRoutes.js";
 import employeesRouter from "./routes/employeeRoutes.js";
@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use(multer().none());
+app.use(fmulter().none());
 
 app.get("/", (req, res) => res.send("Server is running"));
 app.use("/api/auth", authRouter);
@@ -25,10 +25,9 @@ app.use("/api/attendance", attendanceRouter);
 
 const startServer = async () => {
   try {
-    
     await connectDB();
 
-     await sequelize.sync();
+    await sequelize.sync();
     console.log("Database & Users table synced successfully!");
 
     app.listen(PORT, () => {
@@ -39,4 +38,4 @@ const startServer = async () => {
   }
 };
 
-startServer(); 
+startServer();
