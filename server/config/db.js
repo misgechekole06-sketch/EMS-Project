@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import "dotenv/config";
 
-export const sequelize = new Sequelize(
+const sequelize = new Sequelize(
   process.env.DB_NAME || "ems_database",
   process.env.DB_USER || "root",
   process.env.DB_PASS || "",
@@ -9,10 +9,10 @@ export const sequelize = new Sequelize(
     host: process.env.DB_HOST || "localhost",
     dialect: "mysql",
     logging: false,
-  }
+  },
 );
 
-const connectDB = async () => {
+export const connectDB = async () => {
   try {
     await sequelize.authenticate();
     console.log("Database connected successfully!");
@@ -22,4 +22,4 @@ const connectDB = async () => {
   }
 };
 
-export default connectDB;
+export default sequelize;
