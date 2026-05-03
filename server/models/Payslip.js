@@ -2,8 +2,8 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 import Employee from "./Employee.js";
 
-const LeaveApplication = sequelize.define(
-  "LeaveApplication",
+const Payslip = sequelize.define(
+  "Payslip",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -18,25 +18,29 @@ const LeaveApplication = sequelize.define(
         key: "id",
       },
     },
-    type: {
-      type: DataTypes.ENUM("SICK", "CASUAL", "ANNUAL"),
+    month: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    startDate: {
-      type: DataTypes.DATE,
+    year: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    endDate: {
-      type: DataTypes.DATE,
+    basicSalary: {
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
-    reason: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    allowances: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
     },
-    status: {
-      type: DataTypes.ENUM("PENDING", "APPROVED", "REJECTED"),
-      defaultValue: "PENDING",
+    deductions: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
+    },
+    netSalary: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
     },
   },
   {
@@ -44,9 +48,6 @@ const LeaveApplication = sequelize.define(
   },
 );
 
-LeaveApplication.belongsTo(Employee, {
-  foreignKey: "employeeId",
-  as: "employee",
-});
+Payslip.belongsTo(Employee, { foreignKey: "employeeId", as: "employee" });
 
-export default LeaveApplication;
+export default Payslip;
