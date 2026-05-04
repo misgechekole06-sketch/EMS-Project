@@ -1,5 +1,6 @@
 import LeaveApplication from "../models/LeaveApplication.js";
 import Employee from "../models/Employee.js";
+import { inngest } from "../config/inngest.js";
 
 export const applyLeave = async (req, res) => {
   try {
@@ -42,10 +43,19 @@ export const applyLeave = async (req, res) => {
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       reason,
+      status: "PENDING",
+    });
+
+    await inngest.send({
+      name: "leave/pending",
+      data: {
+        leaveApplicationId: leave.id,
+      },
     });
 
     return res.json({ success: true, data: leave });
   } catch (error) {
+    console.error("Apply Leave Error:", error);
     return res.status(500).json({ error: "Failed" });
   }
 };
