@@ -5,33 +5,36 @@ import LeaveApplication from "../models/LeaveApplication.js";
 import { Op } from "sequelize";
 import sendEmail from "../config/nodemailer.js";
 
-export const inngest = new Inngest({ id: "fullstack-ems" });
+export const inngest = new Inngest({
+  id: "fullstack-ems",
+  name: "EMS Project",
+});
 
 const autoCheckOut = inngest.createFunction(
-  { id: "auto-check-out", triggers: [{ event: "employee/check-out" }] },
+  {
+    id: "auto-check-out",
+    name: "Auto Check Out",
+    triggers: [{ event: "employee/check-out" }],
+  },
   async ({ event, step }) => {
     const { employeeId, attendanceId } = event.data;
 
-    await step.sleepUntil(
-      "wait-for-the-9-hours",
-      new Date(new Date().getTime() + 9 * 60 * 60 * 1000),
-    );
+    await step.sleep("wait-for-9-hours", "9h");
 
     let attendance = await Attendance.findByPk(attendanceId);
 
     if (attendance && !attendance.checkOut) {
       const employee = await Employee.findByPk(employeeId);
 
-      await sendEmail({
-        to: user.email,
-        subject: "Attendance Reminder",
-        body: "<h1>Please check in!</h1>",
-      });
+      if (employee?.email) {
+        await sendEmail({
+          to: employee.email,
+          subject: "Attendance Reminder",
+          body: "<h1>Please check out! You have been working for over 9 hours.</h1>",
+        });
+      }
 
-      await step.sleepUntil(
-        "wait-for-the-1-hour",
-        new Date(new Date().getTime() + 1 * 60 * 60 * 1000),
-      );
+      await step.sleep("wait-for-1-hour", "1h");
 
       attendance = await Attendance.findByPk(attendanceId);
 
@@ -48,13 +51,14 @@ const autoCheckOut = inngest.createFunction(
 );
 
 const leaveApplicationReminder = inngest.createFunction(
-  { id: "leave-application-reminder", triggers: [{ event: "leave/pending" }] },
+  {
+    id: "leave-application-reminder",
+    name: "Leave Application Reminder",
+    triggers: [{ event: "leave/pending" }],
+  },
   async ({ event, step }) => {
     const { leaveApplicationId } = event.data;
-    await step.sleepUntil(
-      "wait-for-the-24-hours",
-      new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-    );
+    await step.sleep("wait-for-24-hours", "24h");
 
     const leaveApplication = await LeaveApplication.findByPk(
       leaveApplicationId,
@@ -65,14 +69,18 @@ const leaveApplicationReminder = inngest.createFunction(
       await sendEmail({
         to: process.env.ADMIN_EMAIL,
         subject: "Leave Application Reminder",
-        body: `<h1>Hello Admin, please make sure to take action on the leave application from ${employee.firstName} ${employee.lastName}.</h1>`,
+        body: `<h1>Hello Admin, please take action on leave request from ${employee?.firstName} ${employee?.lastName}.</h1>`,
       });
     }
   },
 );
 
 const attendanceReminderCron = inngest.createFunction(
-  { id: "attendance-reminder-cron", triggers: [{ cron: "0 30 8 * * *" }] },
+  {
+    id: "attendance-reminder-cron",
+    name: "Daily Attendance Reminder",
+    triggers: [{ cron: "0 30 8 * * *" }],
+  },
   async ({ step }) => {
     const today = await step.run("get-today-date", () => {
       const startUTC = new Date(
@@ -83,6 +91,7 @@ const attendanceReminderCron = inngest.createFunction(
       const endUTC = new Date(startUTC.getTime() + 24 * 60 * 60 * 1000);
       return { startUTC: startUTC.toISOString(), endUTC: endUTC.toISOString() };
     });
+
     const activeEmployees = await step.run("get-active-employees", async () => {
       const employees = await Employee.findAll({
         where: { isDeleted: false, employmentStatus: "ACTIVE" },
@@ -95,6 +104,7 @@ const attendanceReminderCron = inngest.createFunction(
         email: e.email,
       }));
     });
+
     const onLeaveIds = await step.run("get-on-leave-ids", async () => {
       const leaves = await LeaveApplication.findAll({
         where: {
@@ -104,8 +114,9 @@ const attendanceReminderCron = inngest.createFunction(
         },
         raw: true,
       });
-      return leaves.map((l) => l.employeeId.toString()); //
+      return leaves.map((l) => l.employeeId.toString());
     });
+
     const checkedInIds = await step.run("get-checked-in-ids", async () => {
       const attendances = await Attendance.findAll({
         where: {
@@ -116,8 +127,9 @@ const attendanceReminderCron = inngest.createFunction(
         },
         raw: true,
       });
-      return attendances.map((a) => a.employeeId.toString()); //
+      return attendances.map((a) => a.employeeId.toString());
     });
+
     const absentEmployees = activeEmployees.filter(
       (emp) => !onLeaveIds.includes(emp.id) && !checkedInIds.includes(emp.id),
     );
@@ -128,16 +140,15 @@ const attendanceReminderCron = inngest.createFunction(
           return sendEmail({
             to: emp.email,
             subject: "Attendance Reminder",
-            body: `<h1>Hello ${emp.firstName}, please make sure to mark your attendance for today.</h1>`,
+            body: `<h1>Hello ${emp.firstName}, please mark your attendance for today.</h1>`,
           });
         });
         await Promise.all(emailPromises);
       });
     }
+
     return {
       totalActive: activeEmployees.length,
-      onLeave: onLeaveIds.length,
-      checkedIn: checkedInIds.length,
       absent: absentEmployees.length,
     };
   },

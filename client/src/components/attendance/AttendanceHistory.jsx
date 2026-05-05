@@ -4,9 +4,9 @@ import {format} from 'date-fns'
 
 const AttendanceHistory = ({ history }) => {
 
-  const getDayTypeDisplay = (record) => {
-    return record.dayType || "Regular Office";
-  };
+  // const getDayTypeDisplay = (record) => {
+  //   return record.dayType || "Regular Office";
+  // };
   return (
     <div className="card overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100">
@@ -57,7 +57,9 @@ const AttendanceHistory = ({ history }) => {
                   </td>
 
                    <td className="px-6 py-4">
-                    {dayType.label !== "-" ? <span className={`badge ${dayType.className}`}>{dayType.label}</span> : "-"}                  
+                    {dayType.label !== "-" ? <span className=
+                    {`badge ${dayType.className}`}>{dayType.label}
+                    </span> : "-"}                  
                   </td>                
 
                   <td className="px-6 py-4">
