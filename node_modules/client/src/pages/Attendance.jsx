@@ -25,8 +25,6 @@ const Attendance = () => {
   today.setHours(0,0,0,0)
   const todayRecord = history.find((r) => new Date(r.date).toDateString() === today.toDateString())
 
-
-
   return (
     <div className="animate-fade-in">
       <div className="page-header">

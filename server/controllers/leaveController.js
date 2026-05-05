@@ -1,6 +1,6 @@
 import LeaveApplication from "../models/LeaveApplication.js";
 import Employee from "../models/Employee.js";
-import { inngest } from "../Inngest/index.js";
+import { inngest } from "../inngest/index.js";
 
 export const applyLeave = async (req, res) => {
   try {
