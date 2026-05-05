@@ -16,7 +16,7 @@ import attendanceRouter from "./routes/attendanceRoutes.js";
 import leaveRouter from "./routes/leaveRoutes.js";
 import dashboardRouter from "./routes/dashboardRoutes.js";
 import { serve } from "inngest/express";
-import { inngest, functions } from "./inngest/index.js";
+import { inngest, functions } from "./Inngest/index.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
