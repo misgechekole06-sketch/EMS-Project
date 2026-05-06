@@ -74,7 +74,7 @@ const leaveApplicationReminder = inngest.createFunction(
 // 3. Daily Attendance Reminder Cron (8:30 AM Addis Ababa Time)
 const attendanceReminderCron = inngest.createFunction(
   { id: "attendance-reminder-cron", name: "Daily Attendance Reminder" },
-  { cron: "30 5 * * *" }, // UTC adjustment: 8:30 AM EAT is 5:30 AM UTC
+  { cron: "TZ=Africa/Addis_Ababa 30 8 * * *" }, // UTC adjustment: 8:30 AM EAT is 5:30 AM UTC
   async ({ step }) => {
     const today = await step.run("get-today-date", () => {
       const startUTC = new Date(
