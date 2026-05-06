@@ -23,6 +23,7 @@ app.use(express.json());
 const upload = multer();
 app.use(upload.none());
 
+app.get(['/favicon.ico', '/favicon.png'], (req, res) => res.status(204).end());
 app.get("/", (req, res) => res.send("Server is running"));
 app.use("/api/auth", authRouter);
 app.use("/api/employees", employeesRouter);
