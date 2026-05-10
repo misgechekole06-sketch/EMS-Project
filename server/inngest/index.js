@@ -4,83 +4,101 @@ import Employee from "../models/Employee.js";
 import LeaveApplication from "../models/LeaveApplication.js";
 import { Op } from "sequelize";
 import sendEmail from "../config/nodemailer.js";
+import sequelize from "../config/db.js";
 
 export const inngest = new Inngest({
   id: "fullstack-ems",
   name: "EMS Project",
 });
 
-// 1. Auto Check Out Function
 const autoCheckOut = inngest.createFunction(
   { id: "auto-check-out", name: "Auto Check Out" },
-  { event: "employee/check-out" }, // Standardized trigger
+  { event: "employee/check-out" },
   async ({ event, step }) => {
     const { employeeId, attendanceId } = event.data;
 
     await step.sleep("wait-for-9-hours", "9h");
 
-    let attendance = await Attendance.findByPk(attendanceId);
+    let attendance = await step.run("fetch-attendance", () =>
+      Attendance.findByPk(attendanceId),
+    );
 
     if (attendance && !attendance.checkOut) {
-      const employee = await Employee.findByPk(employeeId);
+      const employee = await step.run("fetch-employee", () =>
+        Employee.findByPk(employeeId),
+      );
 
       if (employee?.email) {
-        await sendEmail({
-          to: employee.email,
-          subject: "Attendance Reminder",
-          body: "<h1>Please check out! You have been working for over 9 hours.</h1>",
-        });
+        await step.run("send-reminder-email", () =>
+          sendEmail({
+            to: employee.email,
+            subject: "Attendance Reminder",
+            body: "<h1>Please check out! You have been working for over 9 hours.</h1>",
+          }),
+        );
       }
 
       await step.sleep("wait-for-1-hour", "1h");
 
-      attendance = await Attendance.findByPk(attendanceId);
+      attendance = await step.run("fetch-attendance-retry", () =>
+        Attendance.findByPk(attendanceId),
+      );
 
       if (attendance && !attendance.checkOut) {
-        const checkInTime = new Date(attendance.checkIn).getTime();
-        // Force checkout after total 13 hours if they forgot
-        attendance.checkOut = new Date(checkInTime + 4 * 60 * 60 * 1000);
-        attendance.workingHours = 4;
-        attendance.dayType = "Half Day";
-        attendance.status = "LATE";
-        await attendance.save();
+        await step.run("force-checkout", async () => {
+          const checkInTime = new Date(attendance.checkIn).getTime();
+          return await attendance.update({
+            checkOut: new Date(checkInTime + 4 * 60 * 60 * 1000),
+            workingHours: 4,
+            dayType: "Half Day",
+            status: "LATE",
+          });
+        });
       }
     }
-  }
+  },
 );
 
-// 2. Leave Application Reminder
 const leaveApplicationReminder = inngest.createFunction(
   { id: "leave-application-reminder", name: "Leave Application Reminder" },
-  { event: "leave/pending" }, // Standardized trigger
+  { event: "leave/pending" },
   async ({ event, step }) => {
     const { leaveApplicationId } = event.data;
     await step.sleep("wait-for-24-hours", "24h");
 
-    const leaveApplication = await LeaveApplication.findByPk(leaveApplicationId);
-    
-    if (leaveApplication?.status === "PENDING") {
-      const employee = await Employee.findByPk(leaveApplication.employeeId);
+    const leaveApplication = await step.run("get-leave-status", () =>
+      LeaveApplication.findByPk(leaveApplicationId),
+    );
 
-      await sendEmail({
-        to: process.env.ADMIN_EMAIL,
-        subject: "Leave Application Reminder",
-        body: `<h1>Hello Admin, please take action on leave request from ${employee?.firstName} ${employee?.lastName}.</h1>`,
-      });
+    if (leaveApplication?.status === "PENDING") {
+      const employee = await step.run("get-emp", () =>
+        Employee.findByPk(leaveApplication.employeeId),
+      );
+
+      await step.run("notify-admin", () =>
+        sendEmail({
+          to: process.env.ADMIN_EMAIL,
+          subject: "Leave Application Reminder",
+          body: `<h1>Hello Admin, please take action on leave request from ${employee?.firstName} ${employee?.lastName}.</h1>`,
+        }),
+      );
     }
-  }
+  },
 );
 
-// 3. Daily Attendance Reminder Cron (8:30 AM Addis Ababa Time)
 const attendanceReminderCron = inngest.createFunction(
   { id: "attendance-reminder-cron", name: "Daily Attendance Reminder" },
-  { cron: "TZ=Africa/Addis_Ababa 30 8 * * *" }, // UTC adjustment: 8:30 AM EAT is 5:30 AM UTC
+  { cron: "30 8 * * *" },
   async ({ step }) => {
+    await step.run("db-ping", async () => {
+      await sequelize.authenticate();
+    });
+
     const today = await step.run("get-today-date", () => {
       const startUTC = new Date(
         new Date().toLocaleDateString("en-CA", {
           timeZone: "Africa/Addis_Ababa",
-        }) + "T00:00:00+03:00"
+        }) + "T00:00:00+03:00",
       );
       const endUTC = new Date(startUTC.getTime() + 24 * 60 * 60 * 1000);
       return { startUTC: startUTC.toISOString(), endUTC: endUTC.toISOString() };
@@ -125,7 +143,7 @@ const attendanceReminderCron = inngest.createFunction(
     });
 
     const absentEmployees = activeEmployees.filter(
-      (emp) => !onLeaveIds.includes(emp.id) && !checkedInIds.includes(emp.id)
+      (emp) => !onLeaveIds.includes(emp.id) && !checkedInIds.includes(emp.id),
     );
 
     if (absentEmployees.length > 0) {
@@ -145,10 +163,9 @@ const attendanceReminderCron = inngest.createFunction(
       totalActive: activeEmployees.length,
       absent: absentEmployees.length,
     };
-  }
+  },
 );
 
-// Exporting with the structure expected by the 'serve' handler
 export const functions = [
   autoCheckOut,
   leaveApplicationReminder,

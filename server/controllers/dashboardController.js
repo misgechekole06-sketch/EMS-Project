@@ -8,6 +8,11 @@ import { Op } from "sequelize";
 export const getDashboard = async (req, res) => {
   try {
     const user = req.user;
+    if (!user || !user.id) {
+      return res
+        .status(401)
+        .json({ success: false, error: "Invalid User Session" });
+    }
 
     if (user.role === "ADMIN") {
       const [totalEmployees, todayAttendance, pendingLeaves] =
@@ -25,6 +30,7 @@ export const getDashboard = async (req, res) => {
         ]);
 
       return res.json({
+        success: true,
         role: "ADMIN",
         totalEmployees,
         totalDepartments: DEPARTMENTS.length,
@@ -37,7 +43,9 @@ export const getDashboard = async (req, res) => {
       });
 
       if (!employee) {
-        return res.status(404).json({ error: "Employee not found" });
+        return res
+          .status(404)
+          .json({ success: false, error: "Employee profile not found" });
       }
 
       const today = new Date();
@@ -57,17 +65,11 @@ export const getDashboard = async (req, res) => {
           Attendance.count({
             where: {
               employeeId: employee.id,
-              date: {
-                [Op.gte]: firstDayOfMonth,
-                [Op.lt]: lastDayOfMonth,
-              },
+              date: { [Op.gte]: firstDayOfMonth, [Op.lt]: lastDayOfMonth },
             },
           }),
           LeaveApplication.count({
-            where: {
-              employeeId: employee.id,
-              status: "PENDING",
-            },
+            where: { employeeId: employee.id, status: "PENDING" },
           }),
           Payslip.findOne({
             where: { employeeId: employee.id },
@@ -76,6 +78,7 @@ export const getDashboard = async (req, res) => {
         ]);
 
       return res.json({
+        success: true,
         role: "EMPLOYEE",
         employee: employee,
         currentMonthAttendance,
@@ -85,6 +88,8 @@ export const getDashboard = async (req, res) => {
     }
   } catch (error) {
     console.error("Dashboard error:", error);
-    return res.status(500).json({ error: "Failed" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal Server Error" });
   }
 };
