@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import multer from "multer";
 import sequelize, { connectDB } from "./config/db.js";
 import { serve } from "inngest/express";
 
@@ -20,16 +19,14 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const upload = multer();
-app.use(upload.none());
-
-app.get(['/favicon.ico', '/favicon.png'], (req, res) => res.status(204).end());
+app.get(["/favicon.ico", "/favicon.png"], (req, res) => res.status(204).end());
 app.get("/", (req, res) => res.send("Server is running"));
+
 app.use("/api/auth", authRouter);
 app.use("/api/employees", employeesRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/attendance", attendanceRouter);
-app.use("/api/leaves", leaveRouter);
+app.use("/api/leave", leaveRouter);
 app.use("/api/payslips", payslipRouter);
 app.use("/api/dashboard", dashboardRouter);
 

@@ -7,13 +7,18 @@ export const clockInOut = async (req, res) => {
     const user = req.user;
 
     const employee = await Employee.findOne({
-      where: { userId: user.userId },
+      where: { userId: user.id },
     });
 
-    if (!employee) return res.status(404).json({ error: "Employee not found" });
+    if (!employee) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Employee record not found" });
+    }
 
     if (employee.isDeleted) {
       return res.status(403).json({
+        success: false,
         error: "Your account is deactivated. You cannot clock in/out.",
       });
     }
@@ -28,6 +33,7 @@ export const clockInOut = async (req, res) => {
       },
     });
 
+
     if (!existing) {
       const isLate = now.getHours() >= 9 && now.getMinutes() > 0;
       const attendance = await Attendance.create({
@@ -36,6 +42,7 @@ export const clockInOut = async (req, res) => {
         checkIn: now,
         status: isLate ? "LATE" : "PRESENT",
       });
+
       await inngest.send({
         name: "employee/check-out",
         data: {
@@ -45,6 +52,7 @@ export const clockInOut = async (req, res) => {
       });
 
       return res.json({ success: true, type: "CHECK_IN", data: attendance });
+
     } else if (!existing.checkOut) {
       const checkInTime = new Date(existing.checkIn).getTime();
       const diffMs = now.getTime() - checkInTime;
@@ -65,23 +73,32 @@ export const clockInOut = async (req, res) => {
       });
 
       return res.json({ success: true, type: "CHECK_OUT", data: existing });
+
+
     } else {
-      return res.json({ success: true, type: "CHECK_OUT", data: existing });
+      return res.json({ success: true, type: "ALREADY_DONE", data: existing });
     }
   } catch (error) {
-    console.error("Attendance Error:", error);
-    return res.status(500).json({ error: "Operation failed" });
+    console.error("Attendance Clock In/Out Error:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Operation failed on server" });
   }
 };
 
 export const getAttendance = async (req, res) => {
   try {
     const user = req.user;
+
     const employee = await Employee.findOne({
-      where: { userId: user.userId },
+      where: { userId: user.id },
     });
 
-    if (!employee) return res.status(404).json({ error: "Employee not found" });
+    if (!employee) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Employee record not found" });
+    }
 
     const limit = parseInt(req.query.limit || 30);
 
@@ -92,11 +109,14 @@ export const getAttendance = async (req, res) => {
     });
 
     return res.json({
+      success: true,
       data: history,
       employee: { isDeleted: employee.isDeleted },
     });
   } catch (error) {
     console.error("Fetch attendance error:", error);
-    return res.status(500).json({ error: "Failed to fetch attendance" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch attendance history" });
   }
 };
