@@ -1,8 +1,14 @@
 import axios from "axios";
+const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const api = axios.create({
-  baseURL: (import.meta.env.VITE_BASE_URL || "http://localhost:5000") + "/api",
+  baseURL: `${baseURL}/api`,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  timeout: 10000,
 });
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -25,6 +31,8 @@ api.interceptors.response.use(
         window.location.href = "/login";
       }
     }
+    console.error("API Error:", error.response?.data?.message || error.message);
+
     return Promise.reject(error);
   },
 );
