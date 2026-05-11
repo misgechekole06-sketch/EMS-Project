@@ -16,7 +16,26 @@ import dashboardRouter from "./routes/dashboardRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+const allowedOrigins = [
+  "https://ems-project-client.vercel.app",
+  "https://ems-project-client-6z8ravd6y-misgechekole19-6726s-projects.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
 app.use(express.json());
 
 app.get(["/favicon.ico", "/favicon.png"], (req, res) => res.status(204).end());
