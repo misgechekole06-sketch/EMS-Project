@@ -1,14 +1,13 @@
 import { Sequelize } from "sequelize";
 import "dotenv/config";
 import mysql2 from "mysql2";
-
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT) || 16890,
+    port: Number(process.env.DB_PORT) || 16890,
     dialect: "mysql",
     dialectModule: mysql2,
     logging: false,
@@ -33,7 +32,11 @@ export const connectDB = async () => {
     await sequelize.authenticate();
     console.log("Cloud Database connected successfully!");
   } catch (error) {
-    console.error("Database connection failed:", error.message);
+    console.error("Database connection failed details:", {
+      message: error.message,
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+    });
   }
 };
 
