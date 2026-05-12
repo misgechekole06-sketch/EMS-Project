@@ -15,7 +15,6 @@ import dashboardRouter from "./routes/dashboardRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
 const allowedOrigins = [
   "https://ems-project-client.vercel.app",
   "https://ems-project-client-6z8ravd6y-misgechekole19-6726s-projects.vercel.app",
@@ -54,9 +53,9 @@ app.use("/api/inngest", serve({ client: inngest, functions }));
 const startServer = async () => {
   try {
     await connectDB();
-    await sequelize.sync();
-    console.log("Database & Tables synced successfully!");
 
+    await sequelize.sync({ alter: true }); 
+    console.log("Database & Tables synced successfully.");
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
