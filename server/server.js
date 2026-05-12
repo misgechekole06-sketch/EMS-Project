@@ -16,16 +16,18 @@ import dashboardRouter from "./routes/dashboardRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "https://ems-project-client.vercel.app",
-  "https://ems-project-client-6z8ravd6y-misgechekole19-6726s-projects.vercel.app",
+  "https://ems-project-client.vercel.app", 
+  "http://localhost:5173",                 
+  "http://localhost:5174",                 
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log("CORS blocked request from:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -56,6 +58,7 @@ const startServer = async () => {
 
     await sequelize.sync({ alter: true }); 
     console.log("Database & Tables synced successfully.");
+    
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
