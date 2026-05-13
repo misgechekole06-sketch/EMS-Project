@@ -16,9 +16,9 @@ import dashboardRouter from "./routes/dashboardRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "https://ems-project-client.vercel.app", 
-  "http://localhost:5173",                 
-  "http://localhost:5174",                 
+  "https://ems-project-client.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:5174",
 ];
 
 app.use(
@@ -40,7 +40,9 @@ app.use(
 app.use(express.json());
 
 app.get(["/favicon.ico", "/favicon.png"], (req, res) => res.status(204).end());
-app.get("/", (req, res) => res.send("Server is running"));
+app.get("/", (req, res) =>
+  res.send("EMS Server is running and connected to Railway."),
+);
 
 app.use("/api/auth", authRouter);
 app.use("/api/employees", employeesRouter);
@@ -56,14 +58,14 @@ const startServer = async () => {
   try {
     await connectDB();
 
-    await sequelize.sync({ alter: true }); 
-    console.log("Database & Tables synced successfully.");
-    
+    await sequelize.sync();
+    console.log("Sequelize models synced successfully.");
+
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server is live on port ${PORT}`);
     });
   } catch (error) {
-    console.error("Failed to start server:", error.message);
+    console.error("Critical Failure: Could not start server:", error.message);
   }
 };
 

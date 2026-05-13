@@ -1,21 +1,21 @@
 import { Sequelize } from "sequelize";
 import "dotenv/config";
 import mysql2 from "mysql2";
+
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT) || 16890,
+    port: Number(process.env.DB_PORT) || 22470,
     dialect: "mysql",
     dialectModule: mysql2,
     logging: false,
     dialectOptions: {
       connectTimeout: 60000,
       ssl: {
-        rejectUnauthorized: true,
-        ca: process.env.DB_SSL_CA,
+        rejectUnauthorized: false,
       },
     },
     pool: {
@@ -30,13 +30,15 @@ const sequelize = new Sequelize(
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log("Cloud Database connected successfully!");
+    console.log("Railway Cloud Database connected successfully!");
   } catch (error) {
     console.error("Database connection failed details:", {
       message: error.message,
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
+      user: process.env.DB_USER,
     });
+    process.exit(1);
   }
 };
 

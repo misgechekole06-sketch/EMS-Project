@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const api = axios.create({
@@ -6,7 +7,8 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
+
+  timeout: 15000,
 });
 
 api.interceptors.request.use(
@@ -29,8 +31,9 @@ api.interceptors.response.use(
         window.location.href = "/login";
       }
     }
+
     const errorMessage = error.response?.data?.message || error.message;
-    console.error("API Error:", errorMessage);
+    console.error("Frontend API Error:", errorMessage);
 
     return Promise.reject(error);
   },
