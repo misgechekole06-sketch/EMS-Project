@@ -41,7 +41,7 @@ app.use(express.json());
 
 app.get(["/favicon.ico", "/favicon.png"], (req, res) => res.status(204).end());
 app.get("/", (req, res) =>
-  res.send("EMS Server is running and connected to Railway."),
+  res.send("EMS Server is operational and connected to Railway."),
 );
 
 app.use("/api/auth", authRouter);
@@ -51,21 +51,20 @@ app.use("/api/attendance", attendanceRouter);
 app.use("/api/leave", leaveRouter);
 app.use("/api/payslips", payslipRouter);
 app.use("/api/dashboard", dashboardRouter);
-
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 const startServer = async () => {
   try {
     await connectDB();
-
     await sequelize.sync();
-    console.log("Sequelize models synced successfully.");
+    console.log("Database models synchronized successfully.");
 
     app.listen(PORT, () => {
-      console.log(`Server is live on port ${PORT}`);
+      console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("Critical Failure: Could not start server:", error.message);
+    console.error("Critical Failure: Server could not start:", error.message);
+    process.exit(1);
   }
 };
 
