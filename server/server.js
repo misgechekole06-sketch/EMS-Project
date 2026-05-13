@@ -56,7 +56,7 @@ app.use("/api/inngest", serve({ client: inngest, functions }));
 const startServer = async () => {
   try {
     await connectDB();
-    await sequelize.sync();
+    // await sequelize.sync();
     console.log("Database models synchronized successfully.");
 
     app.listen(PORT, () => {
