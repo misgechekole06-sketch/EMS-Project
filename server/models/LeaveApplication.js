@@ -14,7 +14,7 @@ const LeaveApplication = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Employees",
+        model: "employees",
         key: "id",
       },
     },
@@ -40,6 +40,7 @@ const LeaveApplication = sequelize.define(
     },
   },
   {
+    tableName: "leaveapplications",
     timestamps: true,
   },
 );
