@@ -294,7 +294,7 @@ export function getWorkingHoursDisplay(record) {
         const mins = Math.round((record.workingHours - hrs) * 60);
         return `${hrs}h ${mins}m`;
     }
-    // If still checked in (no checkout), compute live hours
+    
     if (record.checkIn && !record.checkOut) {
         const diffMs = Date.now() - new Date(record.checkIn).getTime();
         const diffHours = diffMs / (1000 * 60 * 60);

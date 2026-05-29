@@ -13,7 +13,7 @@ const Attendance = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Employees",
+        model: "employees",
         key: "id",
       },
     },
@@ -48,6 +48,7 @@ const Attendance = sequelize.define(
     },
   },
   {
+    tableName: "attendances",
     timestamps: true,
     indexes: [
       {

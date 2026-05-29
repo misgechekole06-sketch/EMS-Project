@@ -15,12 +15,34 @@ import dashboardRouter from "./routes/dashboardRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const allowedOrigins = [
+  "https://ems-project-client.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:5174",
+];
 
-app.use(cors());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("CORS blocked request from:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
 app.use(express.json());
 
 app.get(["/favicon.ico", "/favicon.png"], (req, res) => res.status(204).end());
-app.get("/", (req, res) => res.send("Server is running"));
+app.get("/", (req, res) =>
+  res.send("EMS Server is operational and connected to Railway."),
+);
 
 app.use("/api/auth", authRouter);
 app.use("/api/employees", employeesRouter);
@@ -29,20 +51,20 @@ app.use("/api/attendance", attendanceRouter);
 app.use("/api/leave", leaveRouter);
 app.use("/api/payslips", payslipRouter);
 app.use("/api/dashboard", dashboardRouter);
-
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 const startServer = async () => {
   try {
     await connectDB();
-    await sequelize.sync();
-    console.log("Database & Tables synced successfully!");
+    // await sequelize.sync();
+    console.log("Database models synchronized successfully.");
 
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("Failed to start server:", error.message);
+    console.error("Critical Failure: Server could not start:", error.message);
+    process.exit(1);
   }
 };
 

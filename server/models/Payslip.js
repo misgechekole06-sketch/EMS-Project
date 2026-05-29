@@ -14,7 +14,7 @@ const Payslip = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Employees",
+        model: "employees",
         key: "id",
       },
     },
@@ -44,6 +44,7 @@ const Payslip = sequelize.define(
     },
   },
   {
+    tableName: "payslips",
     timestamps: true,
   },
 );

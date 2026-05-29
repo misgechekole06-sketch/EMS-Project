@@ -30,13 +30,14 @@ const LoginLanding = () => {
     <div className="min-h-screen flex flex-col md:flex-row">
       <LoginLeftSide />
 
-      {/* {<LoginForm /> } */}
+      {/* LoginForm  */}
 
       <div className="w-full md:w-1/2 flex flex-col items-center
        justify-center p-6 sm:p-12 lg:p-16 relative overflow-y-auto
        min-h-screen">
 
         <div className="w-full max-w-md animate-fade-in relative z-10 flex flex-col min-h-[calc(100vh-8rem)]">
+
           {/* { Header } */}
           <div className="mb-10 text-center md:text-left">
             <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-3">Welcome Back</h2>
@@ -66,7 +67,7 @@ const LoginLanding = () => {
 
           {/* { Footer } */}
           <div className="mt-12 text-center md:text-left text-sm text-slate-400">
-            <p>© {new Date().getFullYear()} MisgeChekole. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Misge Chekole. All rights reserved.</p>
           </div>
       
 
